@@ -1,0 +1,78 @@
+<div class="auth-page">
+  <div class="auth-visual">
+    <div class="visual-inner">
+      <div class="logo">
+        <svg width="48" height="48" viewBox="0 0 28 28">
+          <circle cx="14" cy="14" r="14" fill="#FF6B00"/>
+          <path d="M8 10h12M8 14h8M8 18h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span>Bonici<span class="dot">.</span></span>
+      </div>
+      <h2>Retrouvez tous<br>vos plats préférés</h2>
+      <p>Connectez-vous pour accéder à vos commandes et profiter de vos récompenses.</p>
+    </div>
+  </div>
+
+  <div class="auth-form">
+    <div class="auth-card">
+      <a routerLink="/" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Retour à l'accueil
+      </a>
+
+      <h1>Connexion</h1>
+      <p class="sub">Bienvenue ! Entrez vos identifiants pour continuer.</p>
+
+      @if (error()) {
+        <div class="alert-error">{{ error() }}</div>
+      }
+
+      <form (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label>Adresse email</label>
+          <div class="input-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+            <input type="email" [ngModel]="email()" (ngModelChange)="email.set($event)"
+              name="email" placeholder="votre@email.com" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>
+            Mot de passe
+            <a routerLink="/auth/forgot-password" class="forgot">Mot de passe oublié ?</a>
+          </label>
+          <div class="input-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <input [type]="showPwd() ? 'text' : 'password'"
+              [ngModel]="password()" (ngModelChange)="password.set($event)"
+              name="password" placeholder="••••••••" required />
+            <button type="button" class="eye-btn" (click)="showPwd.update(v => !v)">
+              {{ showPwd() ? '🙈' : '👁' }}
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit" [disabled]="loading()">
+          @if (loading()) {
+            <span class="spinner"></span> Connexion...
+          } @else {
+            Se connecter
+          }
+        </button>
+      </form>
+
+      <p class="switch">
+        Pas encore de compte ? <a routerLink="/register">Créer un compte</a>
+      </p>
+    </div>
+  </div>
+</div>

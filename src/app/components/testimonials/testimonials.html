@@ -1,0 +1,39 @@
+<div class="testimonials">
+  <div class="container">
+    <div class="testi-header">
+      <h2>Ce que nos clients disent</h2>
+      <p>Des centaines d'avis authentiques</p>
+    </div>
+
+    @if (loading()) {
+      <div class="loader">Chargement...</div>
+    } @else if (latestReviews().length > 0) {
+      <div class="testi-card">
+        <div class="testi-content">
+          <div class="stars">
+            @for (star of [1,2,3,4,5]; track star) {
+              <span [class.active]="star <= latestReviews()[activeIndex()].rating">★</span>
+            }
+          </div>
+          <blockquote>{{ latestReviews()[activeIndex()].comment }}</blockquote>
+          <div class="author-name">{{ latestReviews()[activeIndex()].user_name }}</div>
+          @if (latestReviews()[activeIndex()].restaurant_name) {
+            <div class="author-title">{{ latestReviews()[activeIndex()].restaurant_name }}</div>
+          }
+          <div class="verified">✓ Avis vérifié</div>
+        </div>
+      </div>
+      <div class="dots">
+        @for (review of latestReviews(); track review.id; let i = $index) {
+          <button class="dot" [class.active]="i === activeIndex()" (click)="goTo(i)"></button>
+        }
+      </div>
+    } @else {
+      <p>Aucun avis pour le moment.</p>
+    }
+
+    <div class="text-center" style="margin-top: 20px;">
+      <a routerLink="/reviews" class="btn-outline">Voir tous les avis →</a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,36 @@
+<app-navbar />
+<div class="reviews-page">
+  <div class="hero">
+    <h1>Avis <em>clients</em></h1>
+    <p>Ce que nos clients pensent de Bonici</p>
+  </div>
+
+  @if (loading()) {
+    <div class="loader">Chargement...</div>
+  } @else {
+    <div class="reviews-list">
+      @for (review of paginatedReviews; track review.id) {
+        <div class="review-card">
+          <div class="stars">
+            @for (star of [1,2,3,4,5]; track star) {
+              <span [class.active]="star <= review.rating">★</span>
+            }
+          </div>
+          <p class="comment">"{{ review.comment }}"</p>
+          <div class="author">{{ review.user_name }}</div>
+          <div class="restaurant">{{ review.restaurant_name }}</div>
+          <div class="date">{{ review.created_at | date:'dd/MM/yyyy' }}</div>
+        </div>
+      }
+    </div>
+
+    @if (totalPages > 1) {
+      <div class="pagination">
+        <button (click)="prevPage()" [disabled]="currentPage() === 1">Précédent</button>
+        <span>Page {{ currentPage() }} / {{ totalPages }}</span>
+        <button (click)="nextPage()" [disabled]="currentPage() === totalPages">Suivant</button>
+      </div>
+    }
+  }
+</div>
+<app-footer />

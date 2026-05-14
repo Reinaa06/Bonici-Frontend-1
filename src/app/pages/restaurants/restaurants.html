@@ -1,0 +1,61 @@
+<app-navbar />
+<app-cart-sidebar />
+
+<div class="restaurants-page">
+  <div class="hero">
+    <h1>Nos <em>Restaurants</em></h1>
+    <p>Trouvez le BONICI le plus proche de vous</p>
+    <div class="search-bar">
+      <input type="text" [ngModel]="search()" (ngModelChange)="search.set($event)" placeholder="Rechercher par nom ou ville" />
+      <!-- <button class="btn-locate">📍 Me localiser</button> -->
+    </div>
+  </div>
+
+  <div class="restaurants-list">
+    @for (r of filteredRestaurants(); track r.id) {
+      <div class="restaurant-card">
+        <h3>{{ r.name }}</h3>
+        <p>{{ r.address }}, {{ r.city }}</p>
+        <p>📞 {{ r.phone_number || 'Non renseigné' }}</p>
+        
+        <div class="buttons">
+          @if (r.google_maps_url) {
+            <a [href]="r.google_maps_url" target="_blank" class="btn-maps">
+              📍 Google Maps
+            </a>
+          }
+            <a routerLink="/menus" [queryParams]="{restaurant: r.slug}" class="btn-order">
+              Voir le menu
+            </a>
+          <button class="btn-write-review" (click)="showReviewForm.set(true); selectedRestaurantId.set(r.id)">
+            ✍️ Donner mon avis
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (showReviewForm() && selectedRestaurantId()) {
+    <div class="review-form">
+      <h4>Donnez votre avis</h4>
+      <div class="rating">
+        <label>Note : </label>
+        <select [(ngModel)]="newRating">
+          <option [value]="1">1</option>
+          <option [value]="2">2</option>
+          <option [value]="3">3</option>
+          <option [value]="4">4</option>
+          <option [value]="5">5</option>
+        </select>
+      </div>
+      <textarea [(ngModel)]="newComment" rows="4" placeholder="Votre commentaire..."></textarea>
+      <button (click)="submitReview(selectedRestaurantId()!)">Envoyer</button>
+      <button (click)="showReviewForm.set(false)">Annuler</button>
+      @if (reviewSubmitted()) {
+        <p class="success-message">Merci ! Votre avis sera publié après validation.</p>
+      }
+    </div>
+  }
+</div>
+
+<app-footer />

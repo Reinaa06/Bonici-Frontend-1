@@ -1,0 +1,35 @@
+<section class="popular">
+  <div class="container">
+    <div class="pop-header">
+      <div>
+        <h2>Les Plats Les Plus<br>Populaires</h2>
+        <p>Plébiscités par nos clients</p>
+      </div>
+      <div class="caro-btns">
+        <button class="caro-btn" (click)="prev()" [disabled]="!canPrev">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="caro-btn" (click)="next()" [disabled]="!canNext">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="dish-grid">
+      @for (dish of visible; track dish.id) {
+        <a routerLink="/menus" class="pop-card">
+          <div class="pop-img">
+            <img [src]="dish.imageUrl" [alt]="dish.name" loading="lazy">
+          </div>
+          <div class="pop-info">
+            <div class="pop-name">{{ dish.name }}</div>
+            <div class="pop-meta">
+              <span>⭐ {{ dish.count.toLocaleString() }} avis</span>
+              <span class="pop-price">{{ dish.price }} FCFA</span>
+            </div>
+          </div>
+        </a>
+      }
+    </div>
+  </div>
+</section>

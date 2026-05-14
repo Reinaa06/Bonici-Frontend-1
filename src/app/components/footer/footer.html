@@ -1,0 +1,59 @@
+<footer class="footer">
+  <div class="footer-inner">
+    <!-- Logo et newsletter -->
+    <div class="footer-brand">
+      <a routerLink="/" class="logo">
+        <!-- Logo redimensionné + effet visuel -->
+        <!-- <img src="/assets/logo-bonici.png" alt="Bonici Africa" class="logo-img">
+        <span class="logo-text">Bonici<span class="dot">.</span></span> -->
+      </a>
+      <p>Cuisine africaine, européenne, asiatique &amp; plus — livrée rapidement à Lomé.</p>
+      <!-- <div class="newsletter">
+        <input type="email" [ngModel]="email()" (ngModelChange)="email.set($event)" placeholder="Votre email..." />
+        <button (click)="subscribe()">
+          <span>S'abonner</span> →
+        </button>
+      </div> -->
+    </div>
+
+    <!-- Liens -->
+    <div class="footer-col">
+      <h4>Liens</h4>
+      <ul>
+        <li><a routerLink="/">Accueil</a></li>
+        <li><a routerLink="/menus">Menus</a></li>
+        <li><a routerLink="/restaurants">Restaurants</a></li>
+        <li><a routerLink="/suivi">Suivi</a></li>
+      </ul>
+    </div>
+
+    <!-- Informations -->
+    <div class="footer-col">
+      <h4>Informations</h4>
+      <ul>
+        <li><a routerLink="/a-propos">À propos</a></li>
+        <li><a routerLink="/contact">Contact</a></li>
+        <li><a routerLink="/cgu">CGU</a></li>
+        <li><a routerLink="/confidentialite">Confidentialité</a></li>
+      </ul>
+    </div>
+
+    <!-- Horaires (à la place des images) -->
+    <div class="footer-col">
+      <h4>Horaires d'ouverture</h4>
+      <ul class="hours-list">
+        <li><i class="far fa-clock"></i> Lundi - Vendredi : 10h - 22h</li>
+        <li><i class="far fa-clock"></i> Samedi - Dimanche : 11h - 23h</li>
+      </ul>
+      <!-- Petit bonus : contact rapide -->
+      <div class="contact-mini">
+        <p><i class="fas fa-phone-alt"></i> +228 90 00 00 00</p>
+        <p><i class="far fa-envelope"></i> contact&#64;bonici.com</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>Copyright &copy; {{ year }}. BONICI — Tous droits réservés.</span>
+  </div>
+</footer>

@@ -1,0 +1,138 @@
+<app-navbar />
+<app-cart-sidebar />
+
+<div class="menus-page">
+  <div class="menus-hero">
+    <h1>Nos <em>Menus</em></h1>
+    <p>Explorez notre carte multiculturelle — plus de 500 plats</p>
+    <div class="search-box">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2">
+        <circle cx="11" cy="11" r="8" />
+        <path d="m21 21-4.35-4.35" />
+      </svg>
+      <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)"
+             placeholder="Rechercher un plat..." />
+      @if (searchQuery()) {
+        <button (click)="searchQuery.set('')">✕</button>
+      }
+    </div>
+  </div>
+
+  <div class="menus-body">
+    <aside class="filters">
+      <h3>Filtres</h3>
+
+      <div class="filter-group">
+        <label class="filter-label">Catégorie</label>
+        <div class="chips">
+          <button class="chip" [class.active]="activeCategory() === ''" (click)="activeCategory.set('')">
+            Tous
+          </button>
+          @for (c of categories(); track c.slug) {
+            <button class="chip" [class.active]="activeCategory() === c.slug"
+                    (click)="activeCategory.set(c.slug)">
+              {{ c.name }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Prix max : {{ maxPrice().toLocaleString() }} FCFA</label>
+        <input type="range" min="1000" max="15000" step="500"
+          [ngModel]="maxPrice()" (ngModelChange)="maxPrice.set(+$event)" class="range" />
+        <div class="range-labels">
+          <span>1 000</span>
+          <span>15 000</span>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Trier par</label>
+        <select [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)" class="select">
+          <option value="popular">Popularité</option>
+          <option value="price_asc">Prix croissant</option>
+          <option value="price_desc">Prix décroissant</option>
+          <option value="rating">Mieux notés</option>
+        </select>
+      </div>
+
+      <label class="toggle-label">
+        <input type="checkbox" [ngModel]="availableOnly()" (ngModelChange)="availableOnly.set($event)" />
+        <span class="toggle"></span>
+        Disponibles uniquement
+      </label>
+    </aside>
+
+    <main class="dishes-main">
+      <div class="toolbar">
+        <span>{{ filtered().length }} plat(s)</span>
+        <div class="view-btns">
+          <button [class.active]="gridView()" (click)="gridView.set(true)">⊞</button>
+          <button [class.active]="!gridView()" (click)="gridView.set(false)">≡</button>
+        </div>
+      </div>
+
+      <div class="dish-grid" [class.list-view]="!gridView()">
+        @for (dish of filtered(); track dish.id) {
+          <div class="dish-card" [class.unavailable]="!dish.is_available">
+            <div class="dish-img-wrap">
+              <div class="dish-img">
+                <img [src]="dish.imageUrl" [alt]="dish.name"
+                     (error)="dish.imageUrl = '/assets/default-dish.jpg'"
+                     loading="lazy">
+              </div>
+              @if (!dish.is_available) {
+                <div class="unavail-badge">Rupture</div>
+              }
+              <button class="quick-add" [disabled]="!dish.is_available"
+                      (click)="addToCart(dish)" title="Ajouter rapidement">
+                +
+              </button>
+            </div>
+            <div class="dish-body">
+              <div class="dish-cat">{{ getCategoryName(dish.category_slug) }}</div>
+              <h4>{{ dish.name }}</h4>
+              <p class="dish-desc">{{ dish.description }}</p>
+              <div class="dish-meta">
+                <span class="rating">⭐ {{ dish.rating }}
+                  <small>{{ (dish.rating_count || 0).toLocaleString() }}</small>
+                </span>
+              </div>
+              <div class="dish-footer">
+                <!-- Affichage du prix avec ou sans promotion -->
+                <div class="dish-price">
+                  @if (dish.discount && dish.discount > 0) {
+                    <div class="price-promo">
+                      <span class="new-price">{{ dish.price | number }} FCFA</span>
+                      <span class="old-price">{{ dish.original_price | number }} FCFA</span>
+                      <span class="discount-badge">-{{ dish.discount }}%</span>
+                    </div>
+                  } @else {
+                    <div class="price-normal">
+                      <span>{{ dish.price | number }} FCFA</span>
+                    </div>
+                  }
+                </div>
+                <button class="btn-add" [disabled]="!dish.is_available"
+                        (click)="addToCart(dish)">
+                  {{ dish.is_available ? 'Ajouter' : 'Indisponible' }}
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+        @empty {
+          <div class="no-results">
+            <div class="no-results-icon">🍽️</div>
+            <h3>Aucun plat trouvé</h3>
+            <p>Ajustez vos filtres</p>
+            <button (click)="resetFilters()">Réinitialiser</button>
+          </div>
+        }
+      </div>
+    </main>
+  </div>
+</div>
+
+<app-footer />

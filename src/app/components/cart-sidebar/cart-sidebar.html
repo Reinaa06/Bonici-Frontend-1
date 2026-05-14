@@ -1,0 +1,51 @@
+@if (cart.isOpen()) {
+  <div class="backdrop" (click)="cart.close()"></div>
+}
+
+<aside class="drawer" [class.open]="cart.isOpen()">
+  <div class="drawer-header">
+    <h3>Mon Panier <span class="count">{{ cart.count() }}</span></h3>
+    <button (click)="cart.close()">✕</button>
+  </div>
+
+  <div class="drawer-body">
+    @if (cart.items().length === 0) {
+      <div class="empty-cart">
+        <span>🛒</span>
+        <p>Votre panier est vide</p>
+        <button routerLink="/menus" (click)="cart.close()" class="btn-browse">Explorer le menu</button>
+      </div>
+    } @else {
+      <div class="cart-items">
+        @for (item of cart.items(); track item.dish_id) {
+          <div class="cart-item">
+            <div class="item-image">
+              <img [src]="item.imageUrl" [alt]="item.name" loading="lazy">
+            </div>
+            <div class="item-details">
+              <h4>{{ item.name }}</h4>
+              <div class="item-price">{{ item.price.toLocaleString() }} FCFA</div>
+              <div class="item-quantity">
+                <button (click)="cart.updateQty(item.dish_id, item.quantity - 1)">-</button>
+                <span>{{ item.quantity }}</span>
+                <button (click)="cart.updateQty(item.dish_id, item.quantity + 1)">+</button>
+              </div>
+            </div>
+            <button class="item-remove" (click)="cart.remove(item.dish_id)">✕</button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  @if (cart.items().length > 0) {
+    <div class="drawer-footer">
+      <div class="total">
+        <span>Total</span>
+        <span>{{ cart.total().toLocaleString() }} FCFA</span>
+      </div>
+      <button class="btn-clear" (click)="cart.clear()">Vider le panier</button>
+      <button class="btn-checkout" (click)="checkout()">Commander</button>
+    </div>
+  }
+</aside>

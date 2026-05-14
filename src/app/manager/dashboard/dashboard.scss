@@ -1,0 +1,225 @@
+/* =============================================
+   BONICI — Design System
+   ============================================= */
+
+:host {
+  display: block;
+}
+
+/* COLORS */
+
+:root {
+  --bonici-red: #C0392B;
+  --bonici-red-light: #FADBD8;
+  --bonici-red-dark: #922B21;
+  --bonici-black: #1A1A1A;
+  --bonici-white: #FFFFFF;
+  --bonici-gray-bg: #F5F5F5;
+  --bonici-gray-border: #E0E0E0;
+  --bonici-gray-muted: #888888;
+  --bonici-gray-placeholder: #BBBBBB;
+}
+
+/* PAGE */
+
+.page {
+  padding: 2rem;
+  min-height: 100vh;
+  background: var(--bonici-gray-bg);
+}
+
+/* TITLE */
+
+.page-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--bonici-black);
+  margin-bottom: 2rem;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.page-title-icon {
+  color: var(--bonici-red);
+}
+
+/* METRICS */
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+
+  margin-bottom: 2rem;
+}
+
+.metric-card {
+  background: var(--bonici-white);
+  border-radius: 14px;
+
+  padding: 1.2rem;
+
+  border: 1px solid var(--bonici-gray-border);
+  border-left: 4px solid var(--bonici-red);
+
+  transition: transform 0.15s ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-2px);
+}
+
+.metric-card-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--bonici-gray-muted);
+
+  margin-bottom: 8px;
+}
+
+.metric-card-value {
+  font-size: 30px;
+  font-weight: 600;
+
+  color: var(--bonici-black);
+}
+
+.metric-card-value span {
+  font-size: 14px;
+  font-weight: 400;
+
+  color: var(--bonici-gray-muted);
+}
+
+.metric-card-sub {
+  margin-top: 6px;
+
+  font-size: 12px;
+  color: var(--bonici-red);
+}
+
+/* CARD */
+
+.card {
+  background: var(--bonici-white);
+
+  border-radius: 14px;
+
+  overflow: hidden;
+
+  border: 1px solid var(--bonici-gray-border);
+}
+
+.card-header {
+  padding: 1rem 1.25rem;
+
+  border-bottom: 1px solid var(--bonici-gray-border);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-header-title {
+  font-size: 16px;
+  font-weight: 600;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-header-title-icon {
+  color: var(--bonici-red);
+}
+
+.card-body {
+  padding: 1rem;
+}
+
+/* TABLE */
+
+.table-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 14px;
+
+  border-bottom: 1px solid var(--bonici-gray-border);
+
+  transition: background 0.15s ease;
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.table-row:hover {
+  background: var(--bonici-gray-bg);
+}
+
+/* BADGES */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 5px 10px;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.badge-pending {
+  background: #FEF9E7;
+  color: #B7770D;
+}
+
+.badge-active {
+  background: #EAF7F0;
+  color: #1E8449;
+}
+
+.badge-cancelled {
+  background: #FADBD8;
+  color: #922B21;
+}
+
+.badge-delivered {
+  background: #EBF5FB;
+  color: #1A5276;
+}
+
+/* EMPTY STATE */
+
+.empty-state {
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+.empty-state-icon {
+  font-size: 40px;
+
+  display: block;
+
+  margin-bottom: 10px;
+
+  color: var(--bonici-gray-border);
+}
+
+.empty-state-text {
+  font-size: 15px;
+  color: var(--bonici-gray-muted);
+}
+
+.empty-state-subtext {
+  font-size: 12px;
+  color: var(--bonici-gray-placeholder);
+
+  margin-top: 4px;
+}

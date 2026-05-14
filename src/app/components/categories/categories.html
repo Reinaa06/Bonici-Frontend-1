@@ -1,0 +1,36 @@
+<section class="categories">
+  <div class="container">
+    <div class="section-header">
+      <h2>Explorer par catégorie</h2>
+      <p>Des saveurs du monde entier, rassemblées pour vous</p>
+    </div>
+
+    <div class="cat-tabs">
+      @for (cat of categories; track cat.slug) {
+        <button class="cat-tab" [class.active]="activeSlug() === cat.slug" (click)="setActive(cat.slug)">
+           {{ cat.name }}
+        </button>
+      }
+    </div>
+
+    <div class="dish-grid">
+      @for (dish of dishes; track dish.name) {
+        <a routerLink="/menus" [queryParams]="{category: activeSlug()}" class="dish-card">
+          <div class="dish-img">
+            <!-- Remplacement de l'emoji par une image -->
+            <img [src]="dish.imageUrl" [alt]="dish.name" class="dish-img-content">
+            <div class="dish-badge">⭐ {{ dish.price }} Fcfa</div>
+          </div>
+          <div class="dish-name">{{ dish.name }}</div>
+        </a>
+      }
+    </div>
+
+    <div class="section-cta">
+      <a routerLink="/menus" class="btn-outline">
+        En savoir plus
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</section>

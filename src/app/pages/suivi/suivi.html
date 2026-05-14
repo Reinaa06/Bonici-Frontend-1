@@ -1,0 +1,57 @@
+<app-navbar />
+<app-cart-sidebar />
+
+<div class="suivi-page">
+  <div class="suivi-hero">
+    <h1>Suivi de <em>Commande</em></h1>
+    <p>Suivez votre commande en temps réel</p>
+    <div class="order-search">
+      <input type="text"
+        [ngModel]="orderId()" (ngModelChange)="orderId.set($event)"
+        placeholder="Entrez votre numéro de commande"
+        (keyup.enter)="loadOrder()" />
+      <button (click)="loadOrder()">Rechercher</button>
+      <button class="btn-refresh" (click)="loadOrder()">🔄 Rafraîchir</button>
+    </div>
+  </div>
+
+  <div class="suivi-body">
+    @if (loading()) {
+      <div class="loader">Chargement...</div>
+    } @else if (error()) {
+      <div class="error">{{ error() }}</div>
+    } @else if (order()) {
+      <div class="order-detail">
+        <div class="order-header">
+          <h2>Commande #{{ order()!.id }}</h2>
+          <div class="badge" [class]="'badge-' + order()!.status">
+            {{ statusLabels[order()!.status] }}
+          </div>
+        </div>
+
+        <p><strong>Restaurant :</strong> {{ order()!.restaurant_name }}</p>
+        <p><strong>Date :</strong> {{ order()!.created_at | date:'dd/MM/yyyy HH:mm' }}</p>
+        <p><strong>Adresse :</strong> {{ order()!.delivery_address || 'Non renseignée' }}</p>
+        <p><strong>Total :</strong> {{ order()!.total | number:'1.0-0' }} FCFA</p>
+
+        <h3>Articles commandés</h3>
+        <ul>
+          @for (item of order()!.items; track item.dish_name) {
+            <li>{{ item.quantity }} x {{ item.dish_name }} - {{ item.unit_price | number }} FCFA</li>
+          }
+        </ul>
+
+        <div class="actions">
+          @if (canCancel()) {
+            <button class="btn-cancel" (click)="cancelOrder()">Annuler</button>
+          }
+          <a routerLink="/menus" class="btn-reorder">Commander à nouveau</a>
+        </div>
+      </div>
+    } @else {
+      <div class="info">Entrez un numéro de commande pour suivre.</div>
+    }
+  </div>
+</div>
+
+<app-footer />

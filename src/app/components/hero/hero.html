@@ -1,0 +1,41 @@
+<section class="hero">
+  <div class="hero-bg">
+    <div class="overlay"></div>
+    <div class="pattern"></div>
+  </div>
+
+  <div class="hero-content">
+    <div class="badge">
+      <span class="dot"></span>
+      Cuisine africaine, européenne, asiatique &amp; bien plus
+    </div>
+
+    <h1>Commandez vos<br><em>plats préférés,</em><br>livrés rapidement</h1>
+
+    <p class="sub">Découvrez des saveurs du monde entier — directement chez vous.</p>
+
+    <div class="search-bar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input
+        type="text"
+        [ngModel]="searchQuery()"
+        (ngModelChange)="searchQuery.set($event)"
+        placeholder="Rechercher un plat, un restaurant..."
+        (keyup.enter)="onSearch()"
+      />
+      <button (click)="onSearch()">Commander</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><span class="num">500+</span><span class="lbl">Plats disponibles</span></div>
+      <div class="divider"></div>
+      <div class="stat"><span class="num">30 min</span><span class="lbl">Livraison moyenne</span></div>
+      <div class="divider"></div>
+      <div class="stat"><span class="num">4.8★</span><span class="lbl">Note clients</span></div>
+    </div>
+  </div>
+
+  
+</section>
