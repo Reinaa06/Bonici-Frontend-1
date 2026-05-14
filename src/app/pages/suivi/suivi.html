@@ -3,53 +3,87 @@
 
 <div class="suivi-page">
   <div class="suivi-hero">
-    <h1>Suivi de <em>Commande</em></h1>
-    <p>Suivez votre commande en temps réel</p>
-    <div class="order-search">
-      <input type="text"
-        [ngModel]="orderId()" (ngModelChange)="orderId.set($event)"
-        placeholder="Entrez votre numéro de commande"
-        (keyup.enter)="loadOrder()" />
-      <button (click)="loadOrder()">Rechercher</button>
-      <button class="btn-refresh" (click)="loadOrder()">🔄 Rafraîchir</button>
-    </div>
+    <h1>Mes <em>commandes</em></h1>
+    <p>Historique et suivi de vos commandes</p>
   </div>
-
   <div class="suivi-body">
     @if (loading()) {
       <div class="loader">Chargement...</div>
     } @else if (error()) {
       <div class="error">{{ error() }}</div>
-    } @else if (order()) {
+    } @else if (!selectedOrder()) {
+      @if (orders().length === 0) {
+        <div class="empty">
+          <p>Aucune commande passée.</p>
+          <a routerLink="/menus" class="btn-primary">Commander</a>
+        </div>
+      } @else {
+        <div class="orders-list">
+          @for (order of orders(); track order.id) {
+            <div class="order-card" (click)="selectOrder(order.id)">
+              <div class="card-header">
+                <span class="order-nb">#{{ order.id }}</span>
+                <span class="badge" [class]="'badge-' + order.status">{{ statusLabels[order.status] }}</span>
+              </div>
+              <div class="card-body">
+                <div>{{ order.restaurant_name }}</div>
+                <div>{{ order.created_at | date:'dd/MM/yyyy HH:mm' }}</div>
+                <div class="total">{{ order.total | number:'1.0-0' }} FCFA</div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    } @else {
+      <div class="detail-actions">
+        <button class="back-btn" (click)="goBack()">← Retour</button>
+        <button class="btn-refresh" (click)="refreshOrder()">🔄 Rafraîchir</button>
+      </div>
+      
       <div class="order-detail">
-        <div class="order-header">
-          <h2>Commande #{{ order()!.id }}</h2>
-          <div class="badge" [class]="'badge-' + order()!.status">
-            {{ statusLabels[order()!.status] }}
-          </div>
+        <div class="detail-header">
+          <h2>Commande #{{ selectedOrder()!.id }}</h2>
+          <div class="badge" [class]="'badge-' + selectedOrder()!.status">{{ statusLabels[selectedOrder()!.status] }}</div>
+        </div>
+        <p class="resto">{{ selectedOrder()!.restaurant_name }}</p>
+
+        <!-- Barre de progression -->
+        <div class="progress-steps">
+          @for (step of steps; track step.status; let i = $index) {
+            <div class="step" [class.completed]="isDone(step.status)" [class.current]="isCurrent(step.status)">
+              <div class="step-icon">{{ isDone(step.status) ? '✓' : (isCurrent(step.status) ? '●' : '○') }}</div>
+              <div class="step-label">{{ step.label }}</div>
+              @if (i < steps.length - 1) {
+                <div class="step-line" [class.line-completed]="isDone(step.status)"></div>
+              }
+            </div>
+          }
         </div>
 
-        <p><strong>Restaurant :</strong> {{ order()!.restaurant_name }}</p>
-        <p><strong>Date :</strong> {{ order()!.created_at | date:'dd/MM/yyyy HH:mm' }}</p>
-        <p><strong>Adresse :</strong> {{ order()!.delivery_address || 'Non renseignée' }}</p>
-        <p><strong>Total :</strong> {{ order()!.total | number:'1.0-0' }} FCFA</p>
+        <div class="info-block">
+          <h3>Récapitulatif</h3>
+          <p><strong>Articles :</strong> {{ itemsSummary }}</p>
+          <p><strong>Adresse :</strong> {{ selectedOrder()!.delivery_address || 'Non renseignée' }}</p>
+          <p class="total-price"><strong>Total :</strong> {{ selectedOrder()!.total | number:'1.0-0' }} FCFA</p>
+        </div>
 
-        <h3>Articles commandés</h3>
-        <ul>
-          @for (item of order()!.items; track item.dish_name) {
-            <li>{{ item.quantity }} x {{ item.dish_name }} - {{ item.unit_price | number }} FCFA</li>
-          }
-        </ul>
+        @if (selectedOrder()!.delivery_driver_info && selectedOrder()!.status === 'delivering') {
+          <div class="driver">
+            <div>
+              <strong>{{ selectedOrder()!.delivery_driver_info!.username }}</strong><br>
+              <span>Votre livreur est en route</span>
+            </div>
+            <a [href]="'tel:' + selectedOrder()!.delivery_driver_info!.phone_number" class="call-btn">📞 Appeler</a>
+          </div>
+        }
 
         <div class="actions">
           @if (canCancel()) {
-            <button class="btn-cancel" (click)="cancelOrder()">Annuler</button>
+            <button class="cancel" (click)="cancelOrder()">Annuler</button>
           }
-          <a routerLink="/menus" class="btn-reorder">Commander à nouveau</a>
+          <a routerLink="/menus" class="reorder">Commander à nouveau</a>
         </div>
       </div>
-    } @else {
-      <div class="info">Entrez un numéro de commande pour suivre.</div>
     }
   </div>
 </div>

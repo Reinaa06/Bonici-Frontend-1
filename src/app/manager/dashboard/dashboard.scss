@@ -28,14 +28,23 @@
   background: var(--bonici-gray-bg);
 }
 
+/* PAGE HEADER (titre + bouton) */
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
 /* TITLE */
 
 .page-title {
   font-size: 24px;
   font-weight: 600;
   color: var(--bonici-black);
-  margin-bottom: 2rem;
-
   display: flex;
   align-items: center;
   gap: 10px;
@@ -51,19 +60,15 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 16px;
-
   margin-bottom: 2rem;
 }
 
 .metric-card {
   background: var(--bonici-white);
   border-radius: 14px;
-
   padding: 1.2rem;
-
   border: 1px solid var(--bonici-gray-border);
   border-left: 4px solid var(--bonici-red);
-
   transition: transform 0.15s ease;
 }
 
@@ -75,27 +80,23 @@
   font-size: 12px;
   text-transform: uppercase;
   color: var(--bonici-gray-muted);
-
   margin-bottom: 8px;
 }
 
 .metric-card-value {
   font-size: 30px;
   font-weight: 600;
-
   color: var(--bonici-black);
 }
 
 .metric-card-value span {
   font-size: 14px;
   font-weight: 400;
-
   color: var(--bonici-gray-muted);
 }
 
 .metric-card-sub {
   margin-top: 6px;
-
   font-size: 12px;
   color: var(--bonici-red);
 }
@@ -104,19 +105,14 @@
 
 .card {
   background: var(--bonici-white);
-
   border-radius: 14px;
-
   overflow: hidden;
-
   border: 1px solid var(--bonici-gray-border);
 }
 
 .card-header {
   padding: 1rem 1.25rem;
-
   border-bottom: 1px solid var(--bonici-gray-border);
-
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -125,7 +121,6 @@
 .card-header-title {
   font-size: 16px;
   font-weight: 600;
-
   display: flex;
   align-items: center;
   gap: 8px;
@@ -145,11 +140,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   padding: 14px;
-
   border-bottom: 1px solid var(--bonici-gray-border);
-
   transition: background 0.15s ease;
 }
 
@@ -166,11 +158,8 @@
 .badge {
   display: inline-flex;
   align-items: center;
-
   padding: 5px 10px;
-
   border-radius: 999px;
-
   font-size: 12px;
   font-weight: 500;
 }
@@ -204,11 +193,8 @@
 
 .empty-state-icon {
   font-size: 40px;
-
   display: block;
-
   margin-bottom: 10px;
-
   color: var(--bonici-gray-border);
 }
 
@@ -220,6 +206,25 @@
 .empty-state-subtext {
   font-size: 12px;
   color: var(--bonici-gray-placeholder);
-
   margin-top: 4px;
+}
+
+/* BOUTON Voir toutes les commandes */
+
+.btn-orders {
+  background: #C3102F;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 40px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: inline-block;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-orders:hover {
+  background: #A00D27;
 }
