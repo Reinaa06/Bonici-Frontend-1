@@ -1,112 +1,60 @@
 <div class="page">
-
-  <div class="page-title">
-    <span class="page-title-icon">⬢</span>
-    Tableau de bord – Gérant
+  <div class="page-header">
+    <div class="page-title">
+      <span class="page-title-icon">⬢</span>
+      Tableau de bord – Gérant
+    </div>
+    <button class="btn-orders" routerLink="/manager/orders">
+      📋 Voir toutes les commandes
+    </button>
   </div>
 
   <div class="metrics-grid">
-
     <div class="metric-card">
-      <div class="metric-card-label">
-        Commandes aujourd'hui
-      </div>
-
-      <div class="metric-card-value">
-        {{ stats.total_orders_today || 0 }}
-      </div>
-
-      <div class="metric-card-sub">
-        Activité du jour
-      </div>
+      <div class="metric-card-label">Commandes aujourd'hui</div>
+      <div class="metric-card-value">{{ stats.total_orders_today || 0 }}</div>
+      <div class="metric-card-sub">Activité du jour</div>
     </div>
 
     <div class="metric-card">
-      <div class="metric-card-label">
-        En attente
-      </div>
-
-      <div class="metric-card-value">
-        {{ stats.pending_orders || 0 }}
-      </div>
-
-      <div class="metric-card-sub">
-        À traiter
-      </div>
+      <div class="metric-card-label">En attente</div>
+      <div class="metric-card-value">{{ stats.pending_orders || 0 }}</div>
+      <div class="metric-card-sub">À traiter</div>
     </div>
 
     <div class="metric-card">
-      <div class="metric-card-label">
-        CA aujourd'hui
-      </div>
-
-      <div class="metric-card-value">
-        {{ stats.revenue_today || 0 | number }}
-        <span>FCFA</span>
-      </div>
-
-      <div class="metric-card-sub">
-        Revenus du jour
-      </div>
+      <div class="metric-card-label">CA aujourd'hui</div>
+      <div class="metric-card-value">{{ stats.revenue_today || 0 | number }} <span>FCFA</span></div>
+      <div class="metric-card-sub">Revenus du jour</div>
     </div>
-
   </div>
 
   <div class="card">
-
     <div class="card-header">
-
       <div class="card-header-title">
         <span class="card-header-title-icon">◉</span>
         Dernières commandes
       </div>
-
     </div>
-
     <div class="card-body">
-
-      <div
-        class="empty-state"
-        *ngIf="!stats.recent_orders?.length"
-      >
-        <span class="empty-state-icon">⌁</span>
-
-        <div class="empty-state-text">
-          Aucune commande récente
+      @if (!stats.recent_orders?.length) {
+        <div class="empty-state">
+          <span class="empty-state-icon">⌁</span>
+          <div class="empty-state-text">Aucune commande récente</div>
+          <div class="empty-state-subtext">Les nouvelles commandes apparaîtront ici</div>
         </div>
-
-        <div class="empty-state-subtext">
-          Les nouvelles commandes apparaîtront ici
+      }
+      @for (order of stats.recent_orders; track order.id) {
+        <div class="table-row">
+          <div><strong>Commande #{{ order.id }}</strong></div>
+          <div>
+            <span class="badge"
+              [class]="'badge-' + order.status">
+              {{ order.status }}
+            </span>
+          </div>
         </div>
-      </div>
-
-      <div
-        class="table-row"
-        *ngFor="let order of stats.recent_orders"
-      >
-
-        <div>
-          <strong>Commande #{{ order.id }}</strong>
-        </div>
-
-        <div>
-          <span
-            class="badge"
-            [ngClass]="{
-              'badge-pending': order.status === 'pending',
-              'badge-active': order.status === 'active',
-              'badge-delivered': order.status === 'delivered',
-              'badge-cancelled': order.status === 'cancelled'
-            }"
-          >
-            {{ order.status }}
-          </span>
-        </div>
-
-      </div>
-
+      }
     </div>
-
   </div>
-
 </div>

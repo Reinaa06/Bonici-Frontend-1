@@ -31,18 +31,24 @@ export class LoginComponent {
   this.loading.set(true);
   this.error.set('');
 
- this.auth.login({ email: this.email(), password: this.password() }).subscribe({
-  next: (response) => {
-    console.log('Connexion réussie', response);
-    const url = this.route.snapshot.queryParams['returnUrl'] || '/';
-    this.router.navigateByUrl(url);
-  },
-  error: (err: HttpErrorResponse) => {
-    console.error('Erreur connexion', err);
-    this.loading.set(false);
-    this.error.set(err.status === 401 ? 'Email ou mot de passe incorrect.' : 'Erreur serveur. Réessayez.');
-  }
-});
+  this.auth.login({ email: this.email(), password: this.password() }).subscribe({
+    next: (res) => {
+      const user = res.user;
+      // Redirection selon le rôle
+      if (user.role === 'super_admin') {
+        this.router.navigate(['/admin/dashboard']);
+      } else if (user.role === 'admin_restaurant') {
+        this.router.navigate(['/manager/dashboard']);
+      } else {
+        const url = this.route.snapshot.queryParams['returnUrl'] || '/';
+        this.router.navigateByUrl(url);
+      }
+    },
+    error: (err: HttpErrorResponse) => {
+      this.loading.set(false);
+      this.error.set(err.status === 401 ? 'Email ou mot de passe incorrect.' : 'Erreur serveur. Réessayez.');
+    }
+  });
 }
 }
 

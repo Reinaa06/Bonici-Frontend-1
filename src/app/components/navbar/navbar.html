@@ -8,7 +8,7 @@
     <ul class="nav-links">
       <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Accueil</a></li>
       <li><a routerLink="/menus" routerLinkActive="active">Menus</a></li>
-      <li><a routerLink="/restaurants" routerLinkActive="active">Restaurants</a></li>
+      <li><a routerLink="/restaurants-page" routerLinkActive="active">Restaurants</a></li>
       <li><a routerLink="/suivi" routerLinkActive="active">Suivi</a></li>
     </ul>
 
@@ -17,6 +17,12 @@
         <a routerLink="/login" class="btn-outline">Connexion</a>
         <a routerLink="/register" class="btn-primary">Inscription</a>
       } @else {
+        @if (auth.getUser()?.role === 'super_admin') {
+          <a routerLink="/admin/dashboard" class="nav-link">Admin</a>
+        }
+        @if (auth.getUser()?.role === 'admin_restaurant') {
+          <a routerLink="/manager/dashboard" class="nav-link">Dashboard</a>
+        }
         <button class="btn-outline" (click)="auth.logout()">Déconnexion</button>
       }
       <a routerLink="/cart" class="btn-cart" aria-label="Panier">
@@ -40,8 +46,8 @@
       <a routerLink="/menus" (click)="closeMenu()">Menus</a>
       <a routerLink="/restaurants" (click)="closeMenu()">Restaurants</a>
       <a routerLink="/suivi" (click)="closeMenu()">Suivi</a>
-      <a routerLink="/auth/login" (click)="closeMenu()" class="m-login">Connexion</a>
-      <a routerLink="/auth/register" (click)="closeMenu()" class="m-register">Inscription</a>
+      <a routerLink="/login" (click)="closeMenu()" class="m-login">Connexion</a>
+      <a routerLink="/register" (click)="closeMenu()" class="m-register">Inscription</a>
     </div>
   }
 </nav>

@@ -1,11 +1,12 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';  // ← ajout important
 import { ManagerService } from '../../services/manager.service';
 
 @Component({
   selector: 'app-manager-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],  // ← ajout de RouterLink
   templateUrl: './dashboard.html',
   styles: [`
     :host { display: block; }
@@ -33,14 +34,35 @@ import { ManagerService } from '../../services/manager.service';
     .empty-state-icon { font-size: 40px; display: block; margin-bottom: 10px; color: #E0E0E0; }
     .empty-state-text { font-size: 15px; color: #888; }
     .empty-state-subtext { font-size: 12px; color: #BBBBBB; margin-top: 4px; }
+    .btn-orders {
+      background: #C3102F;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 40px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 20px;
+      display: inline-block;
+      text-decoration: none;
+    }
+    .btn-orders:hover {
+      background: #A00D27;
+    }
   `]
 })
 export class ManagerDashboardComponent implements OnInit {
   private manager = inject(ManagerService);
+  private cdr = inject(ChangeDetectorRef);
   stats: any = { recent_orders: [] };
+
   ngOnInit() {
     this.manager.getStats().subscribe({
-      next: (data) => this.stats = data,
+      next: (data) => {
+        this.stats = data;
+        this.cdr.detectChanges();
+      },
       error: (err) => console.error('Erreur chargement dashboard', err)
     });
   }

@@ -1,29 +1,65 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth-guard';
 import { adminGuard } from './guards/admin.guard';
+import { managerGuard } from './guards/manager.guard';
+
+// Imports des composants admin
+import { DashboardComponent } from './admin/dashboard/dashboard';
+import { RestaurantsComponent as AdminRestaurantsComponent } from './admin/restaurants/restaurants';
+import { CategoriesComponent } from './admin/categories/categories';
+import { DishesComponent } from './admin/dishes/dishes';
+import { TablesComponent } from './admin/tables/tables';
+import { PromotionsComponent } from './admin/promotions/promotions';
+import { AdminLayoutComponent } from './admin/admin-layout';
+
+// Imports des composants manager
+import { ManagerDashboardComponent } from './manager/dashboard/dashboard';
+import { ManagerOrdersComponent } from './manager/orders/orders';
+
+// Autres imports
+import { HomeComponent } from './pages/home/home';
+import { LoginComponent } from './pages/auth/login/login';
+import { RegisterComponent } from './pages/auth/register/register';
+import { MenusComponent } from './pages/menus/menus';
+import { CartPageComponent } from './pages/cart/cart';
+import { RestaurantsComponent } from './pages/restaurants/restaurants';
+import { SuiviComponent } from './pages/suivi/suivi';
 
 export const routes: Routes = [
-  { path: '', loadComponent: () => import('./pages/home/home').then(m => m.HomeComponent) },
-  { path: 'login', loadComponent: () => import('./pages/auth/login/login').then(m => m.LoginComponent) },
-  { path: 'register', loadComponent: () => import('./pages/auth/register/register').then(m => m.RegisterComponent) },
-  { path: 'menus', loadComponent: () => import('./pages/menus/menus').then(m => m.MenusComponent), canActivate: [AuthGuard] },
-  { path: 'cart', loadComponent: () => import('./pages/cart/cart').then(m => m.CartPageComponent), canActivate: [AuthGuard] },
-  { path: 'restaurants', loadComponent: () => import('./pages/restaurants/restaurants').then(m => m.RestaurantsComponent), canActivate: [AuthGuard] },
-  { path: 'suivi', loadComponent: () => import('./pages/suivi/suivi').then(m => m.SuiviComponent), canActivate: [AuthGuard] },
+  { path: '', component: HomeComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'menus', component: MenusComponent, canActivate: [AuthGuard] },
+  { path: 'cart', component: CartPageComponent, canActivate: [AuthGuard] },
+  { path: 'restaurants-page', component: RestaurantsComponent, canActivate: [AuthGuard] },
+  { path: 'suivi', component: SuiviComponent, canActivate: [AuthGuard] },
+
+  // Routes admin avec layout
   {
-  path: 'manager',
-  loadChildren: () => import('./manager/manager-module').then(m => m.ManagerModule)
-},
-  // Routes admin (standalone)
-  { path: 'admin/dashboard', loadComponent: () => import('./admin/dashboard/dashboard').then(m => m.DashboardComponent), canActivate: [adminGuard] },
-  { path: 'admin/restaurants', loadComponent: () => import('./admin/restaurants/restaurants').then(m => m.RestaurantsComponent), canActivate: [adminGuard] },
-  { path: 'admin/categories', loadComponent: () => import('./admin/categories/categories').then(m => m.CategoriesComponent), canActivate: [adminGuard] },
-  { path: 'admin/dishes', loadComponent: () => import('./admin/dishes/dishes').then(m => m.DishesComponent), canActivate: [adminGuard] },
-  { path: 'admin/tables', loadComponent: () => import('./admin/tables/tables').then(m => m.TablesComponent), canActivate: [adminGuard] },
-  { path: 'admin/promotions', loadComponent: () => import('./admin/promotions/promotions').then(m => m.PromotionsComponent), canActivate: [adminGuard] },
+    path: 'admin',
+    component: AdminLayoutComponent,
+    canActivate: [adminGuard],
+    children: [
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'restaurants', component: AdminRestaurantsComponent },
+      { path: 'categories', component: CategoriesComponent },
+      { path: 'dishes', component: DishesComponent },
+      { path: 'tables', component: TablesComponent },
+      { path: 'promotions', component: PromotionsComponent },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+    ]
+  },
 
-  { path: 'admin', redirectTo: '/admin/dashboard', pathMatch: 'full' },
-
+  // Routes manager
+  {
+    path: 'manager',
+    canActivate: [managerGuard],
+    children: [
+      { path: 'dashboard', component: ManagerDashboardComponent },
+      { path: 'orders', component: ManagerOrdersComponent },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+    ]
+  },
 
   { path: '**', redirectTo: '' }
 ];
