@@ -22,8 +22,8 @@ export class AdminService {
   deleteCategory(id: number): Observable<any> { return this.http.delete(`${this.apiUrl}/categories/${id}/`); }
 
   getDishes(): Observable<any> { return this.http.get(`${this.apiUrl}/dishes/`); }
-  createDish(data: any): Observable<any> { return this.http.post(`${this.apiUrl}/dishes/`, data); }
-  updateDish(id: number, data: any): Observable<any> { return this.http.put(`${this.apiUrl}/dishes/${id}/`, data); }
+  createDish(data: FormData): Observable<any> { return this.http.post(`${this.apiUrl}/dishes/`, data); }
+  updateDish(id: number, data: FormData): Observable<any> { return this.http.patch(`${this.apiUrl}/dishes/${id}/`, data); }
   deleteDish(id: number): Observable<any> { return this.http.delete(`${this.apiUrl}/dishes/${id}/`); }
 
   getTables(): Observable<any> { return this.http.get(`${this.apiUrl}/tables/`); }

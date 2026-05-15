@@ -15,20 +15,23 @@ import { AdminService } from '../../services/admin.service';
       </div>
       <div class="table-wrapper">
         <table>
-          <thead><tr><th>ID</th><th>Nom</th><th>Catégorie</th><th>Prix</th><th>Dispo</th><th>Menu jour</th><th>Actions</th></tr></thead>
+          <thead><tr><th>ID</th><th>Image</th><th>Nom</th><th>Catégorie</th><th>Prix</th><th>Dispo</th><th>Menu jour</th><th>Actions</th></tr></thead>
           <tbody>
-            <tr *ngFor="let d of dishes()">
-              <td>{{ d.id }}</td>
-              <td>{{ d.name }}</td>
-              <td>{{ d.category_name || d.category }}</td>
-              <td>{{ d.price }} FCFA</td>
-              <td>{{ d.is_available ? '✅' : '❌' }}</td>
-              <td>{{ d.is_daily_special ? '⭐' : '' }}</td>
-              <td>
-                <button class="btn-icon" (click)="edit(d)">✏️</button>
-                <button class="btn-icon" (click)="deleteDish(d.id)">🗑️</button>
-              </td>
-            </tr>
+            @for(d of dishes(); track d.id) {
+              <tr>
+                <td>{{ d.id }}</td>
+                <td>@if(d.image){<img [src]="getImageUrl(d.image)" style="width:48px;height:48px;object-fit:cover;border-radius:8px;">}</td>
+                <td>{{ d.name }}</td>
+                <td>{{ d.category_name || d.category }}</td>
+                <td>{{ d.price }} FCFA</td>
+                <td>{{ d.is_available ? '✅' : '❌' }}</td>
+                <td>{{ d.is_daily_special ? '⭐' : '' }}</td>
+                <td>
+                  <button class="btn-icon" (click)="edit(d)">✏️</button>
+                  <button class="btn-icon" (click)="deleteDish(d.id)">🗑️</button>
+                </td>
+              </tr>
+            }
           </tbody>
         </table>
       </div>
@@ -46,7 +49,18 @@ import { AdminService } from '../../services/admin.service';
               <option *ngFor="let cat of categories()" [value]="cat.id">{{ cat.name }}</option>
             </select>
           </label>
-          <label>Image URL : <input type="text" [(ngModel)]="form.image" name="image"></label>
+          <label>
+            Image :
+            <input type="file" accept="image/*" (change)="onFileChange($event)" name="image">
+            @if(imagePreview){
+              <div style="margin-top:8px">
+                <img [src]="imagePreview" style="height:80px;border-radius:8px;object-fit:cover;">
+              </div>
+            }
+            @if(editingId && form.image && !imagePreview){
+              <small style="color:#888">Image actuelle conservée si aucun nouveau fichier sélectionné</small>
+            }
+          </label>
           <label>Disponible : <input type="checkbox" [(ngModel)]="form.is_available" name="is_available"></label>
           <label>Menu du jour : <input type="checkbox" [(ngModel)]="form.is_daily_special" name="is_daily_special"></label>
           <div class="modal-buttons">
@@ -81,17 +95,68 @@ export class DishesComponent implements OnInit {
   showModal = false;
   editingId: number | null = null;
   form: any = { is_available: true, is_daily_special: false };
+  imagePreview: string | null = null;
+  private selectedFile: File | null = null;
+
   ngOnInit() {
     this.load();
     this.admin.getCategories().subscribe(data => this.categories.set(data));
   }
+
   load() { this.admin.getDishes().subscribe(data => this.dishes.set(data)); }
-  openModal() { this.editingId = null; this.form = { is_available: true, is_daily_special: false }; this.showModal = true; }
-  edit(d: any) { this.editingId = d.id; this.form = { ...d }; this.showModal = true; }
+
+  openModal() {
+    this.editingId = null;
+    this.form = { is_available: true, is_daily_special: false };
+    this.imagePreview = null;
+    this.selectedFile = null;
+    this.showModal = true;
+  }
+
+  edit(d: any) {
+    this.editingId = d.id;
+    this.form = { ...d };
+    this.imagePreview = null;
+    this.selectedFile = null;
+    this.showModal = true;
+  }
+
   closeModal() { this.showModal = false; }
+
+  onFileChange(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0] ?? null;
+    this.selectedFile = file;
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => { this.imagePreview = reader.result as string; };
+      reader.readAsDataURL(file);
+    } else {
+      this.imagePreview = null;
+    }
+  }
+
+  getImageUrl(image: string): string {
+    if (!image) return '';
+    if (image.startsWith('http')) return image;
+    return `http://localhost:8000/media/${image}`;
+  }
+
   save() {
-    const obs = this.editingId ? this.admin.updateDish(this.editingId, this.form) : this.admin.createDish(this.form);
+    const fd = new FormData();
+    fd.append('name', this.form.name ?? '');
+    fd.append('description', this.form.description ?? '');
+    fd.append('price', this.form.price ?? '');
+    fd.append('category', this.form.category ?? '');
+    fd.append('is_available', this.form.is_available ? 'true' : 'false');
+    fd.append('is_daily_special', this.form.is_daily_special ? 'true' : 'false');
+    if (this.selectedFile) {
+      fd.append('image', this.selectedFile, this.selectedFile.name);
+    }
+    const obs = this.editingId
+      ? this.admin.updateDish(this.editingId, fd)
+      : this.admin.createDish(fd);
     obs.subscribe(() => { this.load(); this.closeModal(); });
   }
+
   deleteDish(id: number) { if (confirm('Supprimer ?')) this.admin.deleteDish(id).subscribe(() => this.load()); }
 }

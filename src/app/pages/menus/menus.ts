@@ -71,13 +71,20 @@ export class MenusComponent implements OnInit {
     });
   }
 
+  private getImageUrl(image: string | null): string {
+    if (!image) return '/assets/logo-bonici.png';
+    if (image.startsWith('http')) return image;
+    return `${environment.mediaUrl}/${image}`;
+  }
+
   loadAllDishes() {
     this.loading.set(true);
     this.menuService.getDishes().subscribe({
       next: (data) => {
+        console.log('Plats reçus du backend :', data.map(d => ({ id: d.id, name: d.name, image: d.image })));
         const dishes: DisplayDish[] = data.map(d => ({
           ...d,
-          imageUrl: d.image ? `${environment.mediaUrl}/${d.image}` : '/assets/default-dish.jpg',
+          imageUrl: this.getImageUrl(d.image),
           rating: 4.5,
           rating_count: 0,
           category_slug: d.category_name.toLowerCase()
@@ -118,7 +125,7 @@ loadRestaurantMenuBySlug(slug: string) {
           image: item.dish_image,
           is_available: item.is_available,
           is_daily_special: false,
-          imageUrl: item.dish_image ? `${environment.mediaUrl}/${item.dish_image}` : '/assets/default-dish.jpg',
+          imageUrl: this.getImageUrl(item.dish_image),
           rating: 4.5,
           rating_count: 0,
           category_slug: item.category_name?.toLowerCase().replace(/\s+/g, '_') || ''
